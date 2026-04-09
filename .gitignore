@@ -1,0 +1,40 @@
+# Build artifacts
+bin/
+obj/
+
+# Visual Studio, Rider, VS Code
+.vs/
+.idea/
+.vscode/
+
+# User-specific files
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+
+# Logs, databases, caches
+*.log
+*.tlog
+*.cache
+*.db
+
+# NuGet
+*.nupkg
+packages/
+
+# Publish output
+publish/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+
+# appsettings: keep the example in repo, ignore development overrides and local secrets
+appsettings.Development.json
+appsettings.Local.json
+secrets.json
