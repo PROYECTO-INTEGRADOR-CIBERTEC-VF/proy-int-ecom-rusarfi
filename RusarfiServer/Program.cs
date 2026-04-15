@@ -48,6 +48,7 @@ builder.Services.AddAuthentication(Microsoft.AspNetCore.Authentication.JwtBearer
 builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<RusarfiServer.Service.IAuthService, RusarfiServer.Service.AuthService>();
+builder.Services.AddScoped<RusarfiServer.Service.IProductService, RusarfiServer.Service.ProductService>();
 builder.Services.AddSingleton<RusarfiServer.Service.IJwtTokenService, RusarfiServer.Service.JwtTokenService>();
 
 // Swagger / OpenAPI (Swashbuckle)
