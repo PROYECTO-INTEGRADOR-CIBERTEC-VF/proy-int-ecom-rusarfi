@@ -1,0 +1,53 @@
+:host {
+	display: block;
+}
+
+:host button {
+	border: none;
+	outline: none;
+	cursor: pointer;
+	transition: background-color 150ms ease, transform 100ms ease, box-shadow 150ms ease;
+	-webkit-tap-highlight-color: transparent;
+}
+
+:host button:disabled {
+	cursor: not-allowed;
+	opacity: 0.6;
+	transform: none;
+}
+
+/* Primary variant: brand color */
+:host button[data-variant="primary"] {
+	background-color: #b88a2d;
+	color: #000000;
+	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+:host button[data-variant="primary"]:hover {
+	background-color: #d4a342;
+	transform: translateY(-1px);
+}
+
+:host button[data-variant="primary"]:active {
+	transform: scale(0.99);
+}
+
+/* Secondary variant */
+:host button[data-variant="secondary"] {
+	background-color: #ffffff;
+	color: #181211;
+	border: 1px solid #e5dddc;
+	box-shadow: none;
+}
+
+:host button[data-variant="secondary"]:hover {
+	background-color: #f8f6f6;
+}
+
+/* Ghost variant */
+:host button[data-variant="ghost"] {
+	background-color: transparent;
+	color: #181211;
+	box-shadow: none;
+	border: none;
+}
