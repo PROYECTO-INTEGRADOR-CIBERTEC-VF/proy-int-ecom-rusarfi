@@ -9,7 +9,7 @@ export interface RegisterRequest {
   name: string;
   email: string;
   password: string;
-  confirmPassword: string;
+  ConfirmPassword: string;
 }
 
 export interface UserDto {
