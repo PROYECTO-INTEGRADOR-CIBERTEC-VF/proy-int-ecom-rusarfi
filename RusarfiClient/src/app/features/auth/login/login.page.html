@@ -1,13 +1,140 @@
-<main class="min-h-screen flex flex-col items-center justify-center bg-surface text-on-surface px-6">
-  <div class="max-w-md text-center space-y-4">
-    <h1 class="text-3xl font-headline italic">Login</h1>
-    <p class="text-on-surface-variant text-sm">
-      Pantalla de login pendiente. Puedes volver al registro.
-    </p>
-    <a
-      class="inline-flex items-center justify-center px-5 py-3 bg-primary-fixed text-on-primary rounded-lg uppercase tracking-[0.2em] text-xs"
-      routerLink="/register"
-      >Volver</a
-    >
+<main class="flex-grow flex flex-col md:flex-row min-h-screen">
+  <!-- LADO IZQUIERDO (IGUAL QUE REGISTER) -->
+  <div
+    class="hidden md:flex md:w-1/2 bg-stone-900 relative overflow-hidden items-center justify-center p-12"
+  >
+    <div class="absolute inset-0 z-0">
+      <img
+        alt="Moda urbana premium"
+        class="w-full h-full object-cover opacity-60 grayscale"
+        src="https://lh3.googleusercontent.com/aida-public/AB6AXuB8sQO-mtWpFZF9ITbp7zebcggG7glMaM4JjxFAqJGjVtwF6uLfwWqfb4-7morqmwkCjg_C393kustKhCYyVL6WwY6bYsqYbzB7P8IkORChdLSM-J3d9Klb-QMuJjSYeg60clQuyZqr-77d6-wjFH4Uv5mIFU4Yf1Z3Ht9RJWpQ6IT9lnRhlaWZgGa_l9JHKEUlUdhoIjjq38fiLNISOPnKdiP3oueIT0i8f8CNYPj4ABsqBonPcR4stOePWhqN0lgj4nAL3xyKbuw"
+      />
+    </div>
+
+    <div class="relative z-10 text-white max-w-md">
+      <span class="text-xs tracking-[0.4em] font-label text-primary-fixed mb-4 block">
+        Bienvenido de nuevo
+      </span>
+      <h1 class="text-7xl font-headline italic leading-none mb-6">Rusarfi</h1>
+      <p class="text-stone-300 font-body text-lg leading-relaxed">
+        Accede a tu cuenta y continúa explorando la experiencia.
+      </p>
+    </div>
+
+    <div class="absolute bottom-12 left-12">
+      <span class="brand-font italic text-3xl text-white">RUSARFI</span>
+    </div>
+  </div>
+
+  <!-- LADO DERECHO -->
+  <div class="w-full md:w-1/2 flex flex-col items-center justify-center p-6 md:p-24 bg-surface">
+    <div class="md:hidden mb-12 text-center">
+      <span class="brand-font italic text-4xl text-on-surface">RUSARFI</span>
+    </div>
+
+    <div class="w-full max-w-md">
+      <header class="mb-10">
+        <h2 class="text-4xl font-headline italic mb-2">Iniciar Sesión</h2>
+        <p class="text-on-surface-variant font-label text-sm tracking-wide">
+          Ingresa tus credenciales para continuar.
+        </p>
+      </header>
+
+      <form class="space-y-6" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+
+        <!-- EMAIL -->
+        <app-form-field
+          label="Correo Electrónico"
+          placeholder="ejemplo@gmail.com"
+          icon="mail"
+          type="email"
+          formControlName="email"
+          autocomplete="email"
+        >
+          <p error *ngIf="fieldError('email')" class="text-xs text-error">
+            {{ fieldError('email') }}
+          </p>
+        </app-form-field>
+
+        <!-- PASSWORD -->
+        <app-form-field
+          label="Contraseña"
+          placeholder="••••••••"
+          icon="lock"
+          type="password"
+          formControlName="password"
+          autocomplete="current-password"
+        >
+          <p error *ngIf="fieldError('password')" class="text-xs text-error">
+            {{ fieldError('password') }}
+          </p>
+        </app-form-field>
+
+        <!-- BOTÓN -->
+        <div class="pt-4">
+          <app-button type="submit" [disabled]="isSubmitting">
+            Iniciar Sesión
+          </app-button>
+        </div>
+
+        <!-- LINK A REGISTER -->
+        <div class="text-center pt-6">
+          <p class="text-xs font-body text-on-surface-variant">
+            ¿No tienes cuenta?
+            <a
+              class="text-on-surface font-bold underline underline-offset-4 ml-1"
+              routerLink="/register"
+            >
+              Crear cuenta
+            </a>
+          </p>
+        </div>
+      </form>
+    </div>
   </div>
 </main>
+
+<!-- FOOTER (MISMO QUE REGISTER) -->
+<footer class="w-full mt-20 bg-stone-100">
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-12 px-12 py-20 max-w-7xl mx-auto">
+    <div class="md:col-span-1">
+      <div class="font-serif italic text-2xl text-stone-900 mb-4">RUSARFI</div>
+      <p class="font-sans text-xs tracking-widest text-stone-500 leading-relaxed uppercase">
+        © 2024 RUSARFI. Todos los derechos reservados.
+      </p>
+    </div>
+
+    <div class="flex flex-col gap-4">
+      <span class="font-label font-bold text-[10px] tracking-[0.2em] text-on-surface mb-2">
+        COLECCIONES
+      </span>
+      <a class="text-xs text-stone-500 hover:text-stone-900">Sostenibilidad</a>
+      <a class="text-xs text-stone-500 hover:text-stone-900">Guía de Tallas</a>
+    </div>
+
+    <div class="flex flex-col gap-4">
+      <span class="font-label font-bold text-[10px] tracking-[0.2em] text-on-surface mb-2">
+        ASISTENCIA
+      </span>
+      <a class="text-xs text-stone-500 hover:text-stone-900">Envíos y Devoluciones</a>
+      <a class="text-xs text-stone-500 hover:text-stone-900">Contacto</a>
+    </div>
+
+    <div class="flex flex-col gap-4">
+      <span class="font-label font-bold text-[10px] tracking-[0.2em] text-on-surface mb-2">
+        CONECTA
+      </span>
+      <div class="flex gap-4">
+        <span class="material-symbols-outlined text-stone-500 hover:text-primary cursor-pointer">
+          public
+        </span>
+        <span class="material-symbols-outlined text-stone-500 hover:text-primary cursor-pointer">
+          chat
+        </span>
+        <span class="material-symbols-outlined text-stone-500 hover:text-primary cursor-pointer">
+          mail
+        </span>
+      </div>
+    </div>
+  </div>
+</footer>

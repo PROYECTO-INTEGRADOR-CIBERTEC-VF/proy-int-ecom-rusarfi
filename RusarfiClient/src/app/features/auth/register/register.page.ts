@@ -9,7 +9,7 @@ import {
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs/operators';
-import { AuthService } from '../auth.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { RegisterRequest } from '../auth.models';
 import { NotificationService } from '../../../core/services/notification';
 
@@ -74,9 +74,18 @@ export class RegisterPage {
       return;
     }
 
-    const payload = this.form.getRawValue() as RegisterRequest;
+    const formValue = this.form.getRawValue();
+
+    const payload: RegisterRequest = {
+      name: formValue.name ?? '',
+      email: formValue.email ?? '',
+      password: formValue.password ?? '',
+      ConfirmPassword: formValue.confirmPassword ?? ''
+    };
 
     this.isSubmitting = true;
+
+    console.log(payload);
     this.authService
       .register(payload)
       .pipe(
