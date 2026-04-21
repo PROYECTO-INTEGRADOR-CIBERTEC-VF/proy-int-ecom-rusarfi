@@ -23,4 +23,30 @@ public sealed class ProductsController(IProductService productService) : Control
 
         return StatusCode(result.StatusCode, ApiResponse<object>.Ok(result.Message, result.Data));
     }
+
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetProductDetail(int id, CancellationToken cancellationToken)
+    {
+        var result = await productService.GetProductDetailAsync(id, cancellationToken);
+
+        if (!result.Success)
+        {
+            return StatusCode(result.StatusCode, ApiResponse<object>.Fail(result.Message));
+        }
+
+        return StatusCode(result.StatusCode, ApiResponse<object>.Ok(result.Message, result.Data));
+    }
+
+    [HttpGet("{id:int}/related")]
+    public async Task<IActionResult> GetRelatedProducts(int id, CancellationToken cancellationToken)
+    {
+        var result = await productService.GetRelatedProductsAsync(id, cancellationToken);
+
+        if (!result.Success)
+        {
+            return StatusCode(result.StatusCode, ApiResponse<object>.Fail(result.Message));
+        }
+
+        return StatusCode(result.StatusCode, ApiResponse<object>.Ok(result.Message, result.Data));
+    }
 }
