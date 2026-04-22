@@ -1,5 +1,5 @@
 <main class="flex-grow flex flex-col md:flex-row min-h-screen">
-  <!-- LADO IZQUIERDO (IGUAL QUE REGISTER) -->
+
   <div
     class="hidden md:flex md:w-1/2 bg-stone-900 relative overflow-hidden items-center justify-center p-12"
   >
@@ -26,7 +26,7 @@
     </div>
   </div>
 
-  <!-- LADO DERECHO -->
+
   <div class="w-full md:w-1/2 flex flex-col items-center justify-center p-6 md:p-24 bg-surface">
     <div class="md:hidden mb-12 text-center">
       <span class="brand-font italic text-4xl text-on-surface">RUSARFI</span>
@@ -42,7 +42,6 @@
 
       <form class="space-y-6" [formGroup]="form" (ngSubmit)="submit()" novalidate>
 
-        <!-- EMAIL -->
         <app-form-field
           label="Correo Electrónico"
           placeholder="ejemplo@gmail.com"
@@ -56,7 +55,7 @@
           </p>
         </app-form-field>
 
-        <!-- PASSWORD -->
+
         <app-form-field
           label="Contraseña"
           placeholder="••••••••"
@@ -70,14 +69,14 @@
           </p>
         </app-form-field>
 
-        <!-- BOTÓN -->
+
         <div class="pt-4">
           <app-button type="submit" [disabled]="isSubmitting">
             Iniciar Sesión
           </app-button>
         </div>
 
-        <!-- LINK A REGISTER -->
+  
         <div class="text-center pt-6">
           <p class="text-xs font-body text-on-surface-variant">
             ¿No tienes cuenta?
@@ -93,48 +92,3 @@
     </div>
   </div>
 </main>
-
-<!-- FOOTER (MISMO QUE REGISTER) -->
-<footer class="w-full mt-20 bg-stone-100">
-  <div class="grid grid-cols-1 md:grid-cols-4 gap-12 px-12 py-20 max-w-7xl mx-auto">
-    <div class="md:col-span-1">
-      <div class="font-serif italic text-2xl text-stone-900 mb-4">RUSARFI</div>
-      <p class="font-sans text-xs tracking-widest text-stone-500 leading-relaxed uppercase">
-        © 2024 RUSARFI. Todos los derechos reservados.
-      </p>
-    </div>
-
-    <div class="flex flex-col gap-4">
-      <span class="font-label font-bold text-[10px] tracking-[0.2em] text-on-surface mb-2">
-        COLECCIONES
-      </span>
-      <a class="text-xs text-stone-500 hover:text-stone-900">Sostenibilidad</a>
-      <a class="text-xs text-stone-500 hover:text-stone-900">Guía de Tallas</a>
-    </div>
-
-    <div class="flex flex-col gap-4">
-      <span class="font-label font-bold text-[10px] tracking-[0.2em] text-on-surface mb-2">
-        ASISTENCIA
-      </span>
-      <a class="text-xs text-stone-500 hover:text-stone-900">Envíos y Devoluciones</a>
-      <a class="text-xs text-stone-500 hover:text-stone-900">Contacto</a>
-    </div>
-
-    <div class="flex flex-col gap-4">
-      <span class="font-label font-bold text-[10px] tracking-[0.2em] text-on-surface mb-2">
-        CONECTA
-      </span>
-      <div class="flex gap-4">
-        <span class="material-symbols-outlined text-stone-500 hover:text-primary cursor-pointer">
-          public
-        </span>
-        <span class="material-symbols-outlined text-stone-500 hover:text-primary cursor-pointer">
-          chat
-        </span>
-        <span class="material-symbols-outlined text-stone-500 hover:text-primary cursor-pointer">
-          mail
-        </span>
-      </div>
-    </div>
-  </div>
-</footer>
