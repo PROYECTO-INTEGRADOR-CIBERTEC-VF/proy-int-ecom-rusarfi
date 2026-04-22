@@ -5,6 +5,8 @@ using RusarfiServer.Service;
 
 namespace RusarfiServer.Controllers;
 
+
+//COMENTARIO EJEMPLO 
 [ApiController]
 [Route("api/[controller]")]
 public sealed class AuthController(IAuthService authService) : ControllerBase
