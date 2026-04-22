@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, inject } from '@angular/core';
+import { Component, DestroyRef, inject, ChangeDetectorRef } from '@angular/core'; // 🔹 importamos ChangeDetectorRef
 import {
   FormBuilder,
   FormControl,
@@ -41,6 +41,7 @@ export class AdminProductsPage {
   private readonly notificationService = inject(NotificationService);
   private readonly formBuilder = inject(FormBuilder);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly cdr = inject(ChangeDetectorRef); // 🔹 agregado
 
   protected readonly searchControl = new FormControl('', { nonNullable: true });
 
@@ -285,22 +286,26 @@ export class AdminProductsPage {
           if (!response.success) {
             this.errorMessage = response.message || 'No se pudieron cargar los productos.';
             this.products = [];
+            this.cdr.detectChanges(); 
             return of(null);
           }
 
           this.products = response.data ?? [];
+          this.cdr.detectChanges(); // 🔹 fuerza actualización
           return of(response);
         }),
         catchError(() => {
           this.errorMessage = 'No se pudieron cargar los productos.';
           this.products = [];
+          this.cdr.detectChanges(); // 🔹 fuerza actualización
           return of(null);
         }),
         finalize(() => {
           this.isLoading = false;
+          this.cdr.detectChanges(); // 🔹 fuerza actualización
         })
       );
-  }
+    }
 
     private loadCategories() {
       return this.categoryService.getCategories().pipe(
