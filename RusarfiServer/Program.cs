@@ -55,6 +55,7 @@ if (string.IsNullOrEmpty(key))
 builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<RusarfiServer.Service.IAuthService, RusarfiServer.Service.AuthService>();
+builder.Services.AddScoped<RusarfiServer.Service.ICategoryService, RusarfiServer.Service.CategoryService>();
 builder.Services.AddScoped<RusarfiServer.Service.IProductService, RusarfiServer.Service.ProductService>();
 builder.Services.AddScoped<RusarfiServer.Service.IProductImageService, RusarfiServer.Service.ProductImageService>();
 builder.Services.AddSingleton<RusarfiServer.Service.IJwtTokenService, RusarfiServer.Service.JwtTokenService>();

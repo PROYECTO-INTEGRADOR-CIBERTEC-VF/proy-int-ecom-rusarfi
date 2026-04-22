@@ -1,0 +1,266 @@
+<main class="pt-32 pb-20 px-6 max-w-7xl mx-auto min-h-screen">
+  <header class="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
+    <div>
+      <h1 class="text-5xl md:text-6xl font-headline italic mb-2">Inventario</h1>
+      <p class="text-on-surface-variant font-body tracking-wide">
+        Gestión de productos.
+      </p>
+    </div>
+    <button
+      class="bg-primary-fixed text-on-primary font-body font-bold py-4 px-8 rounded-lg shadow-sm hover:shadow-lg transition-all flex items-center gap-2 uppercase tracking-widest text-xs"
+      type="button"
+      (click)="openCreateModal()"
+    >
+      <span class="material-symbols-outlined text-lg" data-icon="add">add</span>
+      Anadir Nuevo Producto
+    </button>
+  </header>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    <aside class="lg:col-span-3 space-y-6">
+      <div class="bg-surface-container-low p-6 rounded-xl space-y-4">
+        <h3 class="text-xs font-bold tracking-[0.2em] text-secondary uppercase italic">Resumen</h3>
+        <div class="space-y-6">
+          <div>
+            <p class="text-3xl font-headline italic">{{ activeCount }}</p>
+            <p class="text-[10px] uppercase tracking-widest text-on-surface-variant">
+              Productos Activos
+            </p>
+          </div>
+          <div>
+            <p class="text-3xl font-headline italic">{{ outOfStockCount }}</p>
+            <p class="text-[10px] uppercase tracking-widest text-secondary font-bold">Sin Stock</p>
+          </div>
+        </div>
+      </div>
+      <div class="bg-secondary text-white p-6 rounded-xl">
+        <span class="material-symbols-outlined mb-4 text-3xl" data-icon="auto_awesome">auto_awesome</span>
+        <p class="text-lg font-headline italic leading-tight mb-2">Temporada</p>
+        <p class="text-xs opacity-80 leading-relaxed">
+          Asegurate de que las descripciones sean claras.
+        </p>
+      </div>
+    </aside>
+
+    <section class="lg:col-span-9">
+      <div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm">
+        <div class="p-6 flex flex-col md:flex-row justify-between items-center gap-4 border-b border-surface-variant/30">
+          <div class="relative w-full md:w-96">
+            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant" data-icon="search">
+              search
+            </span>
+            <input
+              class="w-full bg-surface-container py-3 pl-12 pr-4 rounded-lg border-none focus:ring-2 focus:ring-primary-fixed text-sm font-body outline-none transition-all"
+              placeholder="Buscar por nombre o categoria..."
+              type="text"
+              [formControl]="searchControl"
+            />
+          </div>
+          <div class="flex items-center gap-3 w-full md:w-auto">
+            <button class="bg-surface-container-high px-4 py-2 rounded-lg text-xs font-bold tracking-widest uppercase flex items-center gap-2" type="button">
+              <span class="material-symbols-outlined text-sm" data-icon="filter_list">filter_list</span>
+              Filtros
+            </button>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left">
+            <thead class="bg-surface-container-low text-[10px] uppercase tracking-[0.2em] text-on-surface-variant">
+              <tr>
+                <th class="px-6 py-4">Producto</th>
+                <th class="px-6 py-4">Categoria</th>
+                <th class="px-6 py-4">Precio</th>
+                <th class="px-6 py-4">Stock</th>
+                <th class="px-6 py-4 text-right">Acciones</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-surface-variant/20 font-body">
+              <tr *ngIf="isLoading">
+                <td class="px-6 py-6 text-sm text-on-surface-variant" colspan="5">Cargando productos...</td>
+              </tr>
+              <tr *ngIf="!isLoading && errorMessage">
+                <td class="px-6 py-6 text-sm text-error" colspan="5">{{ errorMessage }}</td>
+              </tr>
+              <tr *ngIf="!isLoading && !errorMessage && products.length === 0">
+                <td class="px-6 py-6 text-sm text-on-surface-variant" colspan="5">
+                  No hay productos registrados.
+                </td>
+              </tr>
+
+              <tr *ngFor="let product of products; trackBy: trackById" class="hover:bg-surface-container-low transition-colors group">
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-4">
+                    <div class="w-12 h-16 rounded overflow-hidden bg-stone-200 flex items-center justify-center">
+                      <img
+                        *ngIf="product.imageUrl"
+                        class="w-full h-full object-cover"
+                        [src]="product.imageUrl"
+                        [alt]="product.name"
+                      />
+                      <span *ngIf="!product.imageUrl" class="text-[10px] text-stone-500">Sin imagen</span>
+                    </div>
+                    <div>
+                      <p class="font-bold text-sm">
+                        {{ product.name }}
+                        <span
+                          *ngIf="!product.isActive"
+                          class="ml-2 text-[10px] font-bold px-2 py-1 bg-error/10 text-error rounded uppercase tracking-widest"
+                        >
+                          Inactivo
+                        </span>
+                      </p>
+                      <p class="text-[10px] text-on-surface-variant uppercase tracking-tighter">
+                        ID: {{ product.id }}
+                      </p>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4">
+                  <span class="text-[10px] font-bold px-2 py-1 bg-surface-container-high rounded text-secondary uppercase tracking-widest">
+                    {{ product.category || 'Sin categoria' }}
+                  </span>
+                </td>
+                <td class="px-6 py-4 text-sm font-medium">
+                  {{ product.price | currency: 'USD' : 'symbol' : '1.0-2' }}
+                </td>
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full" [ngClass]="stockIndicatorClass(product)"></div>
+                    <span class="text-sm">{{ product.stock }} uni.</span>
+                  </div>
+                </td>
+                <td class="px-6 py-4 text-right">
+                  <div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button class="p-2 hover:text-primary-fixed transition-colors" type="button" (click)="openEditModal(product)">
+                      <span class="material-symbols-outlined text-lg" data-icon="edit">edit</span>
+                    </button>
+                    <button class="p-2 hover:text-error transition-colors" type="button" (click)="confirmDelete(product)">
+                      <span class="material-symbols-outlined text-lg" data-icon="delete">delete</span>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="p-4 bg-surface-container-low flex justify-between items-center text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
+          <span>Pagina 1 de 1</span>
+          <div class="flex gap-4">
+            <button class="hover:text-primary-fixed transition-colors" type="button">Anterior</button>
+            <button class="hover:text-primary-fixed transition-colors" type="button">Siguiente</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<div
+  class="fixed inset-0 z-[60] bg-on-surface/40 backdrop-blur-sm flex items-center justify-center p-6"
+  *ngIf="isModalOpen"
+>
+  <div class="bg-surface-container-lowest w-full max-w-2xl rounded-xl shadow-2xl overflow-hidden">
+    <div class="flex justify-between items-center p-8 border-b border-surface-variant/30">
+      <h2 class="text-3xl font-headline italic">
+        {{ editingProductId ? 'Editar Producto' : 'Nuevo Producto' }}
+      </h2>
+      <button class="p-2 hover:rotate-90 transition-transform duration-300" type="button" (click)="closeModal()">
+        <span class="material-symbols-outlined" data-icon="close">close</span>
+      </button>
+    </div>
+    <form class="p-8 space-y-6" [formGroup]="form" (ngSubmit)="submitForm()">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="space-y-1">
+          <label class="text-[10px] font-bold uppercase tracking-widest text-secondary block">Nombre del Producto</label>
+          <input class="w-full bg-surface-container py-3 px-4 rounded-lg border-none focus:ring-2 focus:ring-primary-fixed text-sm outline-none" type="text" formControlName="name" />
+          <p *ngIf="fieldError('name')" class="text-xs text-error">{{ fieldError('name') }}</p>
+        </div>
+        <div class="space-y-1">
+          <label class="text-[10px] font-bold uppercase tracking-widest text-secondary block">Categoria</label>
+          <select
+            class="w-full bg-surface-container py-3 px-4 rounded-lg border-none focus:ring-2 focus:ring-primary-fixed text-sm outline-none appearance-none"
+            formControlName="categoryId"
+          >
+            <option [value]="0" disabled>Selecciona una categoria</option>
+            <option *ngFor="let category of categories" [value]="category.id">
+              {{ category.name }}
+            </option>
+          </select>
+          <p *ngIf="fieldError('categoryId')" class="text-xs text-error">{{ fieldError('categoryId') }}</p>
+        </div>
+        <div class="md:col-span-2 space-y-1">
+          <label class="text-[10px] font-bold uppercase tracking-widest text-secondary block">Descripcion Editorial</label>
+          <textarea
+            class="w-full bg-surface-container py-3 px-4 rounded-lg border-none focus:ring-2 focus:ring-primary-fixed text-sm outline-none resize-none"
+            rows="3"
+            formControlName="description"
+          ></textarea>
+          <p *ngIf="fieldError('description')" class="text-xs text-error">{{ fieldError('description') }}</p>
+        </div>
+        <div class="space-y-1">
+          <label class="text-[10px] font-bold uppercase tracking-widest text-secondary block">Precio (USD)</label>
+          <input class="w-full bg-surface-container py-3 px-4 rounded-lg border-none focus:ring-2 focus:ring-primary-fixed text-sm outline-none" step="0.01" type="number" formControlName="price" />
+          <p *ngIf="fieldError('price')" class="text-xs text-error">{{ fieldError('price') }}</p>
+        </div>
+        <div class="space-y-1">
+          <label class="text-[10px] font-bold uppercase tracking-widest text-secondary block">Stock Inicial</label>
+          <input class="w-full bg-surface-container py-3 px-4 rounded-lg border-none focus:ring-2 focus:ring-primary-fixed text-sm outline-none" type="number" formControlName="stock" />
+          <p *ngIf="fieldError('stock')" class="text-xs text-error">{{ fieldError('stock') }}</p>
+        </div>
+        <div class="space-y-1 md:col-span-2">
+          <label class="text-[10px] font-bold uppercase tracking-widest text-secondary block">Imagen del Producto</label>
+          <div class="flex flex-col md:flex-row md:items-center gap-4">
+            <input
+              class="w-full bg-surface-container py-3 px-4 rounded-lg border-none focus:ring-2 focus:ring-primary-fixed text-sm outline-none"
+              type="file"
+              (change)="onImageSelected($event)"
+              accept="image/*"
+            />
+            <span *ngIf="isUploading" class="text-xs text-secondary">Subiendo imagen...</span>
+          </div>
+          <input
+            class="w-full bg-surface-container py-3 px-4 rounded-lg border-none text-xs outline-none mt-3"
+            type="text"
+            placeholder="/images/productos/archivo.jpg"
+            formControlName="imageUrl"
+          />
+        </div>
+        <div class="md:col-span-2 flex items-center gap-3">
+          <input id="activeToggle" type="checkbox" class="accent-primary-fixed" formControlName="isActive" />
+          <label for="activeToggle" class="text-xs uppercase tracking-widest text-on-surface-variant">
+            Producto activo
+          </label>
+        </div>
+      </div>
+      <div class="pt-6 flex justify-end gap-4">
+        <button class="px-8 py-3 rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-surface-container-high transition-colors" type="button" (click)="closeModal()">
+          Cancelar
+        </button>
+        <button class="bg-on-surface text-surface py-3 px-10 rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-secondary transition-all" type="submit" [disabled]="isSaving">
+          {{ editingProductId ? 'Guardar Cambios' : 'Guardar Producto' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<nav class="md:hidden fixed bottom-0 left-0 w-full bg-white/90 dark:bg-stone-950/90 backdrop-blur-md flex justify-around items-center px-4 py-3 pb-safe z-50 rounded-t-xl shadow-2xl">
+  <a class="flex flex-col items-center justify-center text-amber-600 dark:text-amber-500 font-bold" href="#">
+    <span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+    <span class="font-sans uppercase tracking-[0.2em] text-[10px] mt-1">Panel</span>
+  </a>
+  <a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-600 hover:bg-stone-100 dark:hover:bg-stone-900 rounded-lg p-2 transition-all" href="#">
+    <span class="material-symbols-outlined" data-icon="search">search</span>
+    <span class="font-sans uppercase tracking-[0.2em] text-[10px] mt-1">Buscar</span>
+  </a>
+  <a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-600 hover:bg-stone-100 dark:hover:bg-stone-900 rounded-lg p-2 transition-all" href="#">
+    <span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+    <span class="font-sans uppercase tracking-[0.2em] text-[10px] mt-1">Pedidos</span>
+  </a>
+  <a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-600 hover:bg-stone-100 dark:hover:bg-stone-900 rounded-lg p-2 transition-all" href="#">
+    <span class="material-symbols-outlined" data-icon="person">person</span>
+    <span class="font-sans uppercase tracking-[0.2em] text-[10px] mt-1">Perfil</span>
+  </a>
+</nav>
