@@ -53,7 +53,7 @@ public sealed class ProductService(AppDbContext db) : IProductService
 
         if (!string.IsNullOrWhiteSpace(normalizedCategory))
         {
-            query = query.Where(p => p.Category.ToLower().Contains(normalizedCategory));
+            query = query.Where(p => p.Category.Name.ToLower().Contains(normalizedCategory));
         }
 
         var products = await query
@@ -68,22 +68,31 @@ public sealed class ProductService(AppDbContext db) : IProductService
     {
         var product = await db.Products
             .AsNoTracking()
-            .SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
+            .Where(p => p.Id == id)
+            .Select(p => ToDto(p))
+            .SingleOrDefaultAsync(cancellationToken);
 
         if (product is null)
         {
             return ServiceResult<ProductDto>.Fail("Producto no encontrado", 404);
         }
 
-        return ServiceResult<ProductDto>.Ok("Producto obtenido correctamente", ToDto(product), 200);
+        return ServiceResult<ProductDto>.Ok("Producto obtenido correctamente", product, 200);
     }
 
     public async Task<ServiceResult<ProductDto>> CreateProductAsync(CreateProductRequest request, CancellationToken cancellationToken)
     {
+        var category = await FindCategoryAsync(request.CategoryId, cancellationToken);
+        if (category is null)
+        {
+            return ServiceResult<ProductDto>.Fail("Categoría no encontrada", 400);
+        }
+
         var product = new Product
         {
             Name = request.Name.Trim(),
-            Category = request.Category.Trim(),
+            CategoryId = category.Id,
+            Category = category,
             Description = (request.Description ?? string.Empty).Trim(),
             Price = request.Price,
             ImageUrl = (request.ImageUrl ?? string.Empty).Trim(),
@@ -108,8 +117,15 @@ public sealed class ProductService(AppDbContext db) : IProductService
             return ServiceResult<ProductDto>.Fail("Producto no encontrado", 404);
         }
 
+        var category = await FindCategoryAsync(request.CategoryId, cancellationToken);
+        if (category is null)
+        {
+            return ServiceResult<ProductDto>.Fail("Categoría no encontrada", 400);
+        }
+
         product.Name = request.Name.Trim();
-        product.Category = request.Category.Trim();
+        product.CategoryId = category.Id;
+        product.Category = category;
         product.Description = (request.Description ?? string.Empty).Trim();
         product.Price = request.Price;
         product.ImageUrl = (request.ImageUrl ?? string.Empty).Trim();
@@ -140,11 +156,15 @@ public sealed class ProductService(AppDbContext db) : IProductService
     private static string Normalize(string? value)
         => (value ?? string.Empty).Trim().ToLower();
 
+    private async Task<Category?> FindCategoryAsync(int categoryId, CancellationToken cancellationToken)
+        => await db.Categories.SingleOrDefaultAsync(c => c.Id == categoryId, cancellationToken);
+
     private static ProductDto ToDto(Product p) => new()
     {
         Id = p.Id,
         Name = p.Name,
-        Category = p.Category,
+        CategoryId = p.CategoryId,
+        Category = p.Category.Name,
         Description = p.Description,
         Price = p.Price,
         ImageUrl = p.ImageUrl,

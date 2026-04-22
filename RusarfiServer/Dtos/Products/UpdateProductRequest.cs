@@ -9,8 +9,8 @@ public sealed class UpdateProductRequest
     public string Name { get; init; } = string.Empty;
 
     [Required(ErrorMessage = "La categoría es obligatoria")]
-    [MaxLength(100, ErrorMessage = "La categoría no puede exceder 100 caracteres")]
-    public string Category { get; init; } = string.Empty;
+    [Range(1, int.MaxValue, ErrorMessage = "La categoría es obligatoria")]
+    public int CategoryId { get; init; }
 
     [MaxLength(500, ErrorMessage = "La descripción no puede exceder 500 caracteres")]
     public string Description { get; init; } = string.Empty;
