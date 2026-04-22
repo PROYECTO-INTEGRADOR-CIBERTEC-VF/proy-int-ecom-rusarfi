@@ -170,6 +170,39 @@ public sealed class CartService(AppDbContext db) : ICartService
         return ServiceResult<CartSummaryDto>.Ok("Carrito actualizado correctamente", summary, 200);
     }
 
+    public async Task<ServiceResult<CartSummaryDto>> RemoveProductAsync(CartRemoveRequest request, CancellationToken cancellationToken)
+    {
+        if (request.UserId <= 0)
+        {
+            return ServiceResult<CartSummaryDto>.Fail("El usuario es obligatorio", 400);
+        }
+
+        if (request.ProductId <= 0)
+        {
+            return ServiceResult<CartSummaryDto>.Fail("El producto es obligatorio", 400);
+        }
+
+        var cartItem = await db.CartItems
+            .SingleOrDefaultAsync(c => c.UserId == request.UserId && c.ProductId == request.ProductId, cancellationToken);
+
+        if (cartItem is null)
+        {
+            return ServiceResult<CartSummaryDto>.Fail("El producto no está en el carrito", 404);
+        }
+
+        db.CartItems.Remove(cartItem);
+        await db.SaveChangesAsync(cancellationToken);
+
+        var summary = await BuildCartSummaryAsync(request.UserId, cancellationToken);
+
+        if (summary.Items.Count == 0)
+        {
+            return ServiceResult<CartSummaryDto>.Ok("No tienes productos en tu carrito", summary, 200);
+        }
+
+        return ServiceResult<CartSummaryDto>.Ok("Producto eliminado del carrito", summary, 200);
+    }
+
     private async Task<CartSummaryDto> BuildCartSummaryAsync(int userId, CancellationToken cancellationToken)
     {
         var items = await db.CartItems
