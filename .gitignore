@@ -77,3 +77,6 @@ Thumbs.db
 testem.log
 /typings
 __screenshots__/
+
+# Ignorar imágenes y archivos estáticos
+RusarfiServer/wwwroot/images/

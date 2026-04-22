@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using RusarfiServer.Data;
 using RusarfiServer.Dtos.Products;
 using RusarfiServer.Models;
@@ -28,7 +29,7 @@ public sealed class ProductService(AppDbContext db) : IProductService
 
         var products = await query
             .OrderBy(p => p.Name)
-            .Select(p => ToDto(p))
+            .Select(ToDtoProjection)
             .ToListAsync(cancellationToken);
 
         if (products.Count == 0)
@@ -58,7 +59,7 @@ public sealed class ProductService(AppDbContext db) : IProductService
 
         var products = await query
             .OrderBy(p => p.Name)
-            .Select(p => ToDto(p))
+            .Select(ToDtoProjection)
             .ToListAsync(cancellationToken);
 
         return ServiceResult<List<ProductDto>>.Ok("Productos obtenidos correctamente", products, 200);
@@ -69,7 +70,7 @@ public sealed class ProductService(AppDbContext db) : IProductService
         var product = await db.Products
             .AsNoTracking()
             .Where(p => p.Id == id)
-            .Select(p => ToDto(p))
+            .Select(ToDtoProjection)
             .SingleOrDefaultAsync(cancellationToken);
 
         if (product is null)
@@ -95,7 +96,7 @@ public sealed class ProductService(AppDbContext db) : IProductService
             Category = category,
             Description = (request.Description ?? string.Empty).Trim(),
             Price = request.Price,
-            ImageUrl = (request.ImageUrl ?? string.Empty).Trim(),
+            ImageUrl = $"https://localhost:7058/images/productos/{Path.GetFileName(request.ImageUrl?.Trim() ?? string.Empty)}",
             Stock = request.Stock,
             IsActive = true,
             CreatedAtUtc = DateTime.UtcNow
@@ -128,7 +129,7 @@ public sealed class ProductService(AppDbContext db) : IProductService
         product.Category = category;
         product.Description = (request.Description ?? string.Empty).Trim();
         product.Price = request.Price;
-        product.ImageUrl = (request.ImageUrl ?? string.Empty).Trim();
+        product.ImageUrl = $"https://localhost:7058/images/productos/{Path.GetFileName(request.ImageUrl?.Trim() ?? string.Empty)}";
         product.Stock = request.Stock;
         product.IsActive = request.IsActive;
 
@@ -159,12 +160,25 @@ public sealed class ProductService(AppDbContext db) : IProductService
     private async Task<Category?> FindCategoryAsync(int categoryId, CancellationToken cancellationToken)
         => await db.Categories.SingleOrDefaultAsync(c => c.Id == categoryId, cancellationToken);
 
-    private static ProductDto ToDto(Product p) => new()
+    private static readonly Expression<Func<Product, ProductDto>> ToDtoProjection = p => new ProductDto
     {
         Id = p.Id,
         Name = p.Name,
         CategoryId = p.CategoryId,
         Category = p.Category.Name,
+        Description = p.Description,
+        Price = p.Price,
+        ImageUrl = p.ImageUrl,
+        Stock = p.Stock,
+        IsActive = p.IsActive
+    };
+
+    private static ProductDto ToDto(Product p) => new()
+    {
+        Id = p.Id,
+        Name = p.Name,
+        CategoryId = p.CategoryId,
+        Category = p.Category?.Name ?? string.Empty,
         Description = p.Description,
         Price = p.Price,
         ImageUrl = p.ImageUrl,
