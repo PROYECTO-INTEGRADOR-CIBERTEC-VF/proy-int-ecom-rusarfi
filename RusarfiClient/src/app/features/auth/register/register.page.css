@@ -1,0 +1,14 @@
+:host {
+  display: block;
+  min-height: 100dvh;
+  background: #f8f6f6;
+  color: #181211;
+}
+
+.text-error {
+  color: #e63b19;
+}
+
+.text-error-dim {
+  color: #b92902;
+}

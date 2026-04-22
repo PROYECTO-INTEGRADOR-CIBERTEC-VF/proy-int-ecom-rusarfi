@@ -1,0 +1,112 @@
+<main class="flex-grow flex flex-col md:flex-row min-h-screen">
+  <div
+    class="hidden md:flex md:w-1/2 bg-stone-900 relative overflow-hidden items-center justify-center p-12"
+  >
+    <div class="absolute inset-0 z-0">
+      <img
+        alt="Toma cinemática de moda urbana de alta gama en un entorno minimalista de galería de concreto con sombras suaves y dramáticas"
+        class="w-full h-full object-cover opacity-60 grayscale"
+        src="https://lh3.googleusercontent.com/aida-public/AB6AXuB8sQO-mtWpFZF9ITbp7zebcggG7glMaM4JjxFAqJGjVtwF6uLfwWqfb4-7morqmwkCjg_C393kustKhCYyVL6WwY6bYsqYbzB7P8IkORChdLSM-J3d9Klb-QMuJjSYeg60clQuyZqr-77d6-wjFH4Uv5mIFU4Yf1Z3Ht9RJWpQ6IT9lnRhlaWZgGa_l9JHKEUlUdhoIjjq38fiLNISOPnKdiP3oueIT0i8f8CNYPj4ABsqBonPcR4stOePWhqN0lgj4nAL3xyKbuw"
+      />
+    </div>
+    <div class="relative z-10 text-white max-w-md">
+      <span class="text-xs tracking-[0.4em] font-label text-primary-fixed mb-4 block">
+        Forma parte de la comunidad
+      </span>
+      <h1 class="text-7xl font-headline italic leading-none mb-6">Rusarfi</h1>
+      <p class="text-stone-300 font-body text-lg leading-relaxed">
+        Descubre lanzamientos exclusivos, lookbooks privados y una experiencia auténtica.
+      </p>
+    </div>
+    <div class="absolute bottom-12 left-12">
+      <span class="brand-font italic text-3xl text-white">RUSARFI</span>
+    </div>
+  </div>
+
+  <div class="w-full md:w-1/2 flex flex-col items-center justify-center p-6 md:p-24 bg-surface">
+    <div class="md:hidden mb-12 text-center">
+      <span class="brand-font italic text-4xl text-on-surface">RUSARFI</span>
+    </div>
+
+    <div class="w-full max-w-md">
+      <header class="mb-10">
+        <h2 class="text-4xl font-headline italic mb-2">Crear Cuenta</h2>
+        <p class="text-on-surface-variant font-label text-sm tracking-wide">
+          Ingresa tus datos para comenzar tu viaje.
+        </p>
+      </header>
+
+      <form class="space-y-6" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        <app-form-field
+          label="Nombre Completo"
+          placeholder="Tu nombre completo"
+          icon="person"
+          formControlName="name"
+          autocomplete="name"
+        >
+          <p error *ngIf="fieldError('name')" class="text-xs text-error">
+            {{ fieldError('name') }}
+          </p>
+        </app-form-field>
+
+        <app-form-field
+          label="Correo Electrónico"
+          placeholder="ejemplo@gmail.com"
+          icon="mail"
+          type="email"
+          formControlName="email"
+          autocomplete="email"
+        >
+          <p error *ngIf="fieldError('email')" class="text-xs text-error">
+            {{ fieldError('email') }}
+          </p>
+        </app-form-field>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <app-form-field
+            label="Contraseña"
+            placeholder="••••••••"
+            icon="lock"
+            type="password"
+            formControlName="password"
+            autocomplete="new-password"
+          >
+            <p error *ngIf="fieldError('password')" class="text-xs text-error">
+              {{ fieldError('password') }}
+            </p>
+          </app-form-field>
+
+          <app-form-field
+            label="Confirmar Contraseña"
+            placeholder="••••••••"
+            icon="lock_reset"
+            type="password"
+            formControlName="confirmPassword"
+            autocomplete="new-password"
+          >
+            <p error *ngIf="fieldError('confirmPassword')" class="text-xs text-error">
+              {{ fieldError('confirmPassword') }}
+            </p>
+          </app-form-field>
+        </div>
+
+        <div class="pt-4">
+          <app-button type="submit" [disabled]="isSubmitting">
+            Crear Cuenta
+          </app-button>
+        </div>
+
+        <div class="text-center pt-6">
+          <p class="text-xs font-body text-on-surface-variant">
+            ¿Ya eres miembro?
+            <a
+              class="text-on-surface font-bold underline underline-offset-4 ml-1"
+              routerLink="/login"
+              >Inicia Sesión</a
+            >
+          </p>
+        </div>
+      </form>
+    </div>
+  </div>
+</main>
