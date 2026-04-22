@@ -22,7 +22,7 @@ public sealed class ProductService(AppDbContext db) : IProductService
 
         if (!string.IsNullOrWhiteSpace(normalizedCategory))
         {
-            query = query.Where(p => p.Category.ToLower().Contains(normalizedCategory));
+            query = query.Where(p => p.Category.Name.ToLower().Contains(normalizedCategory));
         }
 
         var products = await query
@@ -31,7 +31,7 @@ public sealed class ProductService(AppDbContext db) : IProductService
             {
                 Id = p.Id,
                 Name = p.Name,
-                Category = p.Category,
+                Category = p.Category.Name,
                 Price = p.Price,
                 ImageUrl = p.ImageUrl
             })

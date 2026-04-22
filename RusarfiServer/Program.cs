@@ -56,6 +56,7 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<RusarfiServer.Service.IAuthService, RusarfiServer.Service.AuthService>();
 builder.Services.AddScoped<RusarfiServer.Service.IProductService, RusarfiServer.Service.ProductService>();
+builder.Services.AddScoped<RusarfiServer.Service.IProductImageService, RusarfiServer.Service.ProductImageService>();
 builder.Services.AddSingleton<RusarfiServer.Service.IJwtTokenService, RusarfiServer.Service.JwtTokenService>();
 
 // Swagger / OpenAPI (Swashbuckle)
@@ -74,6 +75,8 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+var productImagesPath = Path.Combine(app.Environment.ContentRootPath, "wwwroot", "images", "productos");
+Directory.CreateDirectory(productImagesPath);
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -84,6 +87,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("AllowAll");
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 
