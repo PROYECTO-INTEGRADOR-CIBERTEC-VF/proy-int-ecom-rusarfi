@@ -1,0 +1,25 @@
+<nav class="bg-white/90 dark:bg-stone-950/90 backdrop-blur-md fixed top-0 z-50 w-full">
+  <div class="flex justify-between items-center w-full px-8 py-6 max-w-screen-2xl mx-auto">
+    <div class="text-3xl font-serif italic text-stone-900 dark:text-stone-50">RUSARFI</div>
+    <div class="hidden md:flex items-center space-x-8">
+      <a class="text-stone-600 dark:text-stone-400 font-sans tracking-[0.2em] text-xs hover:text-amber-600 dark:hover:text-amber-400 transition-colors duration-300" href="#">NUEVO</a>
+      <a class="text-amber-600 dark:text-amber-500 border-b-2 border-amber-600 pb-1 font-sans tracking-[0.2em] text-xs" href="#">ROPA</a>
+      <a class="text-stone-600 dark:text-stone-400 font-sans tracking-[0.2em] text-xs hover:text-amber-600 dark:hover:text-amber-400 transition-colors duration-300" href="#">ACCESORIOS</a>
+      <a class="text-stone-600 dark:text-stone-400 font-sans tracking-[0.2em] text-xs hover:text-amber-600 dark:hover:text-amber-400 transition-colors duration-300" href="#">LOOKBOOK</a>
+    </div>
+    <div class="flex items-center space-x-6">
+      <div class="relative hidden sm:block">
+        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-sm">search</span>
+        <input class="bg-surface-container border-none text-[10px] tracking-widest pl-10 pr-4 py-2 w-48 focus:ring-1 focus:ring-primary" placeholder="BUSCAR COLECCIÓN..." type="text"/>
+      </div>
+      <a
+        class="material-symbols-outlined cursor-pointer text-stone-700 dark:text-stone-200 hover:text-primary transition-colors"
+        routerLink="/login"
+        aria-label="Iniciar sesión"
+      >
+        person
+      </a>
+      <span class="material-symbols-outlined cursor-pointer text-stone-700 dark:text-stone-200 hover:text-primary transition-colors">shopping_bag</span>
+    </div>
+  </div>
+</nav>
