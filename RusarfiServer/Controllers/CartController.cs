@@ -21,4 +21,30 @@ public sealed class CartController(ICartService cartService) : ControllerBase
 
         return StatusCode(result.StatusCode, ApiResponse<object>.Ok(result.Message, result.Data));
     }
+
+    [HttpGet("{userId:int}")]
+    public async Task<IActionResult> GetCart(int userId, CancellationToken cancellationToken)
+    {
+        var result = await cartService.GetCartAsync(userId, cancellationToken);
+
+        if (!result.Success)
+        {
+            return StatusCode(result.StatusCode, ApiResponse<object>.Fail(result.Message));
+        }
+
+        return StatusCode(result.StatusCode, ApiResponse<object>.Ok(result.Message, result.Data));
+    }
+
+    [HttpPut("items")]
+    public async Task<IActionResult> UpdateQuantity([FromBody] CartUpdateRequest request, CancellationToken cancellationToken)
+    {
+        var result = await cartService.UpdateQuantityAsync(request, cancellationToken);
+
+        if (!result.Success)
+        {
+            return StatusCode(result.StatusCode, ApiResponse<object>.Fail(result.Message));
+        }
+
+        return StatusCode(result.StatusCode, ApiResponse<object>.Ok(result.Message, result.Data));
+    }
 }
