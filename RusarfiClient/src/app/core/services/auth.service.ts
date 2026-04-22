@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { RegisterRequest, RegisterResponse } from './auth.models';
+import { RegisterRequest, RegisterResponse } from '../../features/auth/auth.models';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -11,4 +11,8 @@ export class AuthService {
   register(payload: RegisterRequest) {
     return this.http.post<RegisterResponse>(`${this.baseUrl}/api/auth/register`, payload);
   }
+
+  login(payload: { email: string; password: string }) {
+  return this.http.post<any>(`${this.baseUrl}/api/auth/login`, payload);
+}
 }

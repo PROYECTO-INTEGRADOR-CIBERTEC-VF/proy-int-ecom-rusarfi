@@ -25,12 +25,19 @@ builder.Services.Configure<Microsoft.AspNetCore.Mvc.ApiBehaviorOptions>(options 
 builder.Services.AddDbContext<RusarfiServer.Data.AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+
 builder.Services.AddAuthentication(Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         var issuer = builder.Configuration["Jwt:Issuer"];
         var audience = builder.Configuration["Jwt:Audience"];
-        var key = builder.Configuration["Jwt:Key"];
+        var key = "MI_CLAVE_SUPER_SECRETA_123456789";
+
+if (string.IsNullOrEmpty(key))
+{
+    throw new Exception("JWT Key no está configurada");
+}
 
         options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
         {
@@ -49,6 +56,7 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<RusarfiServer.Service.IAuthService, RusarfiServer.Service.AuthService>();
 builder.Services.AddScoped<RusarfiServer.Service.IProductService, RusarfiServer.Service.ProductService>();
+builder.Services.AddScoped<RusarfiServer.Service.IProductImageService, RusarfiServer.Service.ProductImageService>();
 builder.Services.AddSingleton<RusarfiServer.Service.IJwtTokenService, RusarfiServer.Service.JwtTokenService>();
 
 // Swagger / OpenAPI (Swashbuckle)
@@ -67,6 +75,8 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+var productImagesPath = Path.Combine(app.Environment.ContentRootPath, "wwwroot", "images", "productos");
+Directory.CreateDirectory(productImagesPath);
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -77,6 +87,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("AllowAll");
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 
