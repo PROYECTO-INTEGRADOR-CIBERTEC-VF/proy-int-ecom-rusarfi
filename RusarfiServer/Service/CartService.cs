@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using RusarfiServer.Data;
 using RusarfiServer.Dtos.Cart;
 using RusarfiServer.Models;
