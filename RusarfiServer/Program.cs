@@ -58,6 +58,7 @@ builder.Services.AddScoped<RusarfiServer.Service.IAuthService, RusarfiServer.Ser
 builder.Services.AddScoped<RusarfiServer.Service.ICategoryService, RusarfiServer.Service.CategoryService>();
 builder.Services.AddScoped<RusarfiServer.Service.IProductService, RusarfiServer.Service.ProductService>();
 builder.Services.AddScoped<RusarfiServer.Service.ICartService, RusarfiServer.Service.CartService>();
+builder.Services.AddScoped<RusarfiServer.Service.IOrderService, RusarfiServer.Service.OrderService>();
 builder.Services.AddScoped<RusarfiServer.Service.IProductImageService, RusarfiServer.Service.ProductImageService>();
 builder.Services.AddSingleton<RusarfiServer.Service.IJwtTokenService, RusarfiServer.Service.JwtTokenService>();
 
