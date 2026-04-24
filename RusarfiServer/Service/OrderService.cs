@@ -112,7 +112,12 @@ public sealed class OrderService(AppDbContext db) : IOrderService
         }
     }
 
-    public async Task<ServiceResult<List<OrderDto>>> GetOrdersByUserAsync(int userId, CancellationToken cancellationToken)
+    public async Task<ServiceResult<List<OrderDto>>> GetOrdersByUserAsync(
+    int userId,
+    string? status,
+    DateTime? fromDate,
+    DateTime? toDate,
+    CancellationToken cancellationToken)
     {
         if (userId <= 0)
         {
@@ -125,9 +130,27 @@ public sealed class OrderService(AppDbContext db) : IOrderService
             return ServiceResult<List<OrderDto>>.Fail("El usuario no existe", 404);
         }
 
-        var orders = await db.Orders
+        var query = db.Orders
             .AsNoTracking()
-            .Where(o => o.UserId == userId)
+            .Where(o => o.UserId == userId);
+
+        if (!string.IsNullOrWhiteSpace(status))
+        {
+            var normalizedStatus = status.Trim().ToLower();
+            query = query.Where(o => o.Status.ToLower().Contains(normalizedStatus));
+        }
+
+        if (fromDate.HasValue)
+        {
+            query = query.Where(o => o.CreatedAtUtc.Date >= fromDate.Value.Date);
+        }
+
+        if (toDate.HasValue)
+        {
+            query = query.Where(o => o.CreatedAtUtc.Date <= toDate.Value.Date);
+        }
+
+        var orders = await query
             .OrderByDescending(o => o.CreatedAtUtc)
             .Select(o => new OrderDto
             {
@@ -157,5 +180,50 @@ public sealed class OrderService(AppDbContext db) : IOrderService
         }
 
         return ServiceResult<List<OrderDto>>.Ok("Pedidos obtenidos correctamente", orders, 200);
+    }
+
+    public async Task<ServiceResult<OrderDto>> GetOrderByIdAsync(int userId, int orderId, CancellationToken cancellationToken)
+    {
+        if (userId <= 0)
+        {
+            return ServiceResult<OrderDto>.Fail("El usuario es obligatorio", 400);
+        }
+
+        if (orderId <= 0)
+        {
+            return ServiceResult<OrderDto>.Fail("El pedido es obligatorio", 400);
+        }
+
+        var order = await db.Orders
+            .AsNoTracking()
+            .Where(o => o.UserId == userId && o.Id == orderId)
+            .Select(o => new OrderDto
+            {
+                OrderId = o.Id,
+                UserId = o.UserId,
+                Total = o.Total,
+                Status = o.Status,
+                CreatedAtUtc = o.CreatedAtUtc,
+                Items = o.Items
+                    .OrderBy(i => i.ProductName)
+                    .Select(i => new OrderItemDto
+                    {
+                        ProductId = i.ProductId,
+                        ProductName = i.ProductName,
+                        ImageUrl = i.ImageUrl,
+                        Quantity = i.Quantity,
+                        UnitPrice = i.UnitPrice,
+                        Subtotal = i.Subtotal
+                    })
+                    .ToList()
+            })
+            .SingleOrDefaultAsync(cancellationToken);
+
+        if (order is null)
+        {
+            return ServiceResult<OrderDto>.Fail("Pedido no encontrado", 404);
+        }
+
+        return ServiceResult<OrderDto>.Ok("Pedido obtenido correctamente", order, 200);
     }
 }
