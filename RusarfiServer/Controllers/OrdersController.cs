@@ -23,9 +23,27 @@ public sealed class OrdersController(IOrderService orderService) : ControllerBas
     }
 
     [HttpGet("user/{userId:int}")]
-    public async Task<IActionResult> GetOrdersByUser(int userId, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetOrdersByUser(
+        int userId,
+        [FromQuery] string? status,
+        [FromQuery] DateTime? fromDate,
+        [FromQuery] DateTime? toDate,
+        CancellationToken cancellationToken)
     {
-        var result = await orderService.GetOrdersByUserAsync(userId, cancellationToken);
+        var result = await orderService.GetOrdersByUserAsync(userId, status, fromDate, toDate, cancellationToken);
+
+        if (!result.Success)
+        {
+            return StatusCode(result.StatusCode, ApiResponse<object>.Fail(result.Message));
+        }
+
+        return StatusCode(result.StatusCode, ApiResponse<object>.Ok(result.Message, result.Data));
+    }
+
+    [HttpGet("user/{userId:int}/{orderId:int}")]
+    public async Task<IActionResult> GetOrderById(int userId, int orderId, CancellationToken cancellationToken)
+    {
+        var result = await orderService.GetOrderByIdAsync(userId, orderId, cancellationToken);
 
         if (!result.Success)
         {
