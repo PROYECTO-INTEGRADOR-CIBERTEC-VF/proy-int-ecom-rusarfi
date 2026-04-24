@@ -47,4 +47,17 @@ public sealed class CartController(ICartService cartService) : ControllerBase
 
         return StatusCode(result.StatusCode, ApiResponse<object>.Ok(result.Message, result.Data));
     }
+
+    [HttpDelete("items")]
+    public async Task<IActionResult> RemoveProduct([FromBody] CartRemoveRequest request, CancellationToken cancellationToken)
+    {
+        var result = await cartService.RemoveProductAsync(request, cancellationToken);
+
+        if (!result.Success)
+        {
+            return StatusCode(result.StatusCode, ApiResponse<object>.Fail(result.Message));
+        }
+
+        return StatusCode(result.StatusCode, ApiResponse<object>.Ok(result.Message, result.Data));
+    }
 }

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.IO;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -86,7 +87,7 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Crear carpeta de imágenes (si no existe)
+// Crear carpeta de imágenes si no existe
 var productImagesPath = Path.Combine(app.Environment.ContentRootPath, "wwwroot", "images", "productos");
 Directory.CreateDirectory(productImagesPath);
 
