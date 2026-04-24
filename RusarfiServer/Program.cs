@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
+
 builder.Services.Configure<Microsoft.AspNetCore.Mvc.ApiBehaviorOptions>(options =>
 {
     options.InvalidModelStateResponseFactory = context =>
@@ -26,12 +27,12 @@ builder.Services.Configure<Microsoft.AspNetCore.Mvc.ApiBehaviorOptions>(options 
     };
 });
 
+// Cargar configuración
+builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+
 // DbContext
 builder.Services.AddDbContext<RusarfiServer.Data.AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-// Cargar configuración
-builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
 // JWT Authentication
 builder.Services.AddAuthentication(Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)
@@ -67,6 +68,7 @@ builder.Services.AddScoped<RusarfiServer.Service.IAuthService, RusarfiServer.Ser
 builder.Services.AddScoped<RusarfiServer.Service.ICategoryService, RusarfiServer.Service.CategoryService>();
 builder.Services.AddScoped<RusarfiServer.Service.IProductService, RusarfiServer.Service.ProductService>();
 builder.Services.AddScoped<RusarfiServer.Service.ICartService, RusarfiServer.Service.CartService>();
+builder.Services.AddScoped<RusarfiServer.Service.IOrderService, RusarfiServer.Service.OrderService>();
 builder.Services.AddScoped<RusarfiServer.Service.IProductImageService, RusarfiServer.Service.ProductImageService>();
 builder.Services.AddSingleton<RusarfiServer.Service.IJwtTokenService, RusarfiServer.Service.JwtTokenService>();
 
@@ -100,9 +102,13 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("AllowAll");
+
 app.UseHttpsRedirection();
+
 app.UseStaticFiles();
+
 app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.MapControllers();
