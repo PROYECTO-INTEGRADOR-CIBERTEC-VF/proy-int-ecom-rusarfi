@@ -255,29 +255,21 @@ public sealed class ProductService(AppDbContext db) : IProductService
         var value = (imageUrl ?? string.Empty).Trim();
 
         if (string.IsNullOrWhiteSpace(value))
-        {
             return string.Empty;
-        }
 
         if (value.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
             value.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
-        {
             return value;
-        }
 
         if (value.StartsWith("/images/productos/", StringComparison.OrdinalIgnoreCase))
-        {
-            return value;
-        }
+            return $"https://localhost:7058{value}";
 
         var fileName = Path.GetFileName(value);
 
         if (string.IsNullOrWhiteSpace(fileName))
-        {
             return string.Empty;
-        }
 
-        return $"/images/productos/{fileName}";
+        return $"https://localhost:7058/images/productos/{fileName}";
     }
 
     private static readonly Expression<Func<Product, ProductDto>> ToDtoProjection = p => new ProductDto
