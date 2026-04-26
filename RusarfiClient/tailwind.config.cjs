@@ -1,0 +1,72 @@
+module.exports = {
+  content: ['./src/**/*.{html,ts}'],
+  theme: {
+    extend: {
+      colors: {
+        'inverse-primary': '#f8f6f6',
+        background: '#f8f6f6',
+        'on-surface': '#181211',
+        'primary-dim': '#694a00',
+        'tertiary-container': '#1a110f',
+        'primary-container': '#b88a2d',
+        'on-secondary-container': '#ffffff',
+        'tertiary-dim': '#575100',
+        'on-tertiary-fixed': '#ffffff',
+        'inverse-surface': '#211411',
+        'error-container': '#ffdad6',
+        'on-secondary-fixed': '#ffffff',
+        'tertiary-fixed': '#25D366',
+        'on-tertiary': '#ffffff',
+        'on-error-container': '#93000a',
+        'secondary-container': '#e63b19',
+        'on-primary-fixed': '#000000',
+        'primary-fixed': '#d4a342',
+        'inverse-on-surface': '#ffffff',
+        'surface-variant': '#f1efee',
+        'outline-variant': '#3d2a26',
+        'primary-fixed-dim': '#b88a2d',
+        error: '#e63b19',
+        'on-tertiary-fixed-variant': '#ffffff',
+        'secondary-fixed-dim': '#5b6348',
+        'tertiary-fixed-dim': '#25D366',
+        surface: '#f8f6f6',
+        'on-surface-variant': '#5b6348',
+        'on-secondary': '#ffffff',
+        'on-secondary-fixed-variant': '#ffffff',
+        secondary: '#5b6348',
+        'on-background': '#181211',
+        'on-primary-container': '#ffffff',
+        'on-primary': '#000000',
+        'surface-container': '#f8f6f6',
+        'surface-dim': '#e5dddc',
+        'secondary-dim': '#624d00',
+        'error-dim': '#b92902',
+        outline: '#e5dddc',
+        primary: '#d4a342',
+        'surface-container-high': '#f1efee',
+        'on-error': '#ffffff',
+        'secondary-fixed': '#5b6348',
+        'surface-container-highest': '#ebe9e8',
+        'surface-container-lowest': '#ffffff',
+        'on-primary-fixed-variant': '#000000',
+        'surface-container-low': '#fcfaf9',
+        'surface-bright': '#ffffff',
+        'on-tertiary-container': '#ffffff',
+        tertiary: '#25D366',
+        'surface-tint': '#d4a342'
+      },
+      borderRadius: {
+        DEFAULT: '0.25rem',
+        lg: '0.5rem',
+        xl: '0.75rem',
+        full: '9999px'
+      },
+      fontFamily: {
+        headline: ['Newsreader', 'serif'],
+        body: ['Plus Jakarta Sans', 'sans-serif'],
+        label: ['Plus Jakarta Sans', 'sans-serif']
+      }
+    }
+  },
+  plugins: []
+};
