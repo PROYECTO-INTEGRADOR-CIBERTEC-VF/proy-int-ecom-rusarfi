@@ -28,6 +28,14 @@ export const routes: Routes = [
 	},
 
 	{
+		path: 'cart',
+		loadComponent: () =>
+			import('./features/cart/cart.component').then(
+				(m) => m.CartComponent
+			)
+	},
+
+	{
 		path: 'product-detail/:id',
 		loadComponent: () =>
 			import('./product-detail/product-detail').then(

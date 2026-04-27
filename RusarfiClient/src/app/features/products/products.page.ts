@@ -15,6 +15,8 @@ import {
 
 import { ProductService } from '../../core/services/product.service';
 import { ProductDto } from './products.models';
+import { CartService } from '../../core/services/cart.service';
+import { CartAddRequest } from '../../core/models/cart-item.dto';
 
 @Component({
   selector: 'app-products',
@@ -24,6 +26,7 @@ import { ProductDto } from './products.models';
 })
 export class ProductsPage {
   private readonly productService = inject(ProductService);
+  private readonly cartService = inject(CartService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly cdr = inject(ChangeDetectorRef);
 
@@ -35,6 +38,7 @@ export class ProductsPage {
   protected categories: Array<{ name: string; count: number }> = [];
   protected isLoading = true;
   protected errorMessage = '';
+  protected successMessage = '';
   protected emptyMessage = 'No hay productos disponibles.';
 
   private apiMessage = 'No hay productos disponibles.';
@@ -83,6 +87,7 @@ export class ProductsPage {
         this.allProducts = items;
         this.categories = this.buildCategories(items);
         this.applyFilters();
+        try { this.cdr.detectChanges(); } catch {}
       });
 
     this.searchControl.valueChanges
@@ -113,6 +118,26 @@ export class ProductsPage {
 
   protected trackById(_index: number, product: ProductDto): number {
     return product.id;
+  }
+
+  protected addToCart(product: ProductDto): void {
+    this.successMessage = '';
+    this.errorMessage = '';
+    const req: CartAddRequest = { userId: 1, productId: product.id, quantity: 1 };
+    this.cartService.addProduct(req).subscribe({
+      next: (res) => {
+        if (res?.success) {
+          this.successMessage = 'Producto agregado al carrito.';
+        } else {
+          this.errorMessage = res?.message || 'No se pudo agregar al carrito.';
+        }
+        try { this.cdr.detectChanges(); } catch {}
+      },
+      error: () => {
+        this.errorMessage = 'No se pudo agregar al carrito.';
+        try { this.cdr.detectChanges(); } catch {}
+      }
+    });
   }
 
   private applyFilters(): void {

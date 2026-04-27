@@ -1,0 +1,60 @@
+<main class="pt-8 pb-20 px-6 max-w-screen-2xl mx-auto">
+  <header class="mb-8">
+    <h1 class="text-4xl font-headline italic">Carrito</h1>
+  </header>
+
+  <section *ngIf="isLoading && items.length === 0" class="text-center text-sm text-stone-500 py-12">
+    Cargando carrito...
+  </section>
+
+  <section *ngIf="!isLoading && errorMessage" class="text-center text-sm text-error py-6">
+    {{ errorMessage }}
+  </section>
+
+  <section *ngIf="!isLoading && items.length === 0 && !errorMessage" class="text-center py-12">
+    <p class="text-sm text-stone-600">No tienes productos en tu carrito.</p>
+  </section>
+
+  <section *ngIf="items.length > 0">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse">
+        <thead>
+          <tr class="text-xs text-stone-500 uppercase tracking-widest">
+            <th class="pb-4">Producto</th>
+            <th class="pb-4">Cantidad</th>
+            <th class="pb-4">Precio unitario</th>
+            <th class="pb-4">Subtotal</th>
+            <th class="pb-4">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of items">
+            <td class="py-4">{{ item.productName }}</td>
+            <td class="py-4">
+              <input
+                type="number"
+                min="1"
+                [value]="item.quantity"
+                (change)="onQuantityChange(item, $any($event.target).value)"
+                class="w-20 px-2 py-1 border"
+              />
+            </td>
+            <td class="py-4">{{ item.price | currency: 'USD' }}</td>
+            <td class="py-4">{{ item.subtotal | currency: 'USD' }}</td>
+            <td class="py-4">
+              <button (click)="removeItem(item)" class="px-3 py-1 bg-error text-white rounded">Eliminar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="mt-6 flex justify-end items-center gap-6">
+      <div class="text-right">
+        <div class="text-sm text-stone-500">Total</div>
+        <div class="text-2xl font-headline">{{ total | currency: 'USD' }}</div>
+      </div>
+      <button (click)="confirmPurchase()" class="px-6 py-3 bg-primary text-on-primary rounded font-bold">Confirmar compra</button>
+    </div>
+  </section>
+</main>

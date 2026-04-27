@@ -1,17 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { ProductService } from '../core/services/product.service';
-import { ProductDto, ProductResponse } from '../features/products/products.models';
-import { CartService } from '../core/services/cart.service';
-import { CartAddRequest } from '../core/models/cart-item.dto';
+import { ProductService } from '../app/core/services/product.service';
+import { ProductDto, ProductResponse } from '../app/features/products/products.models';
+import { CartService } from '../app/core/services/cart.service';
+import { CartAddRequest } from '../app/core/models/cart-item.dto';
 
 @Component({
   selector: 'app-product-detail',
   standalone: true,
   imports: [CommonModule, RouterModule],
-  templateUrl: './product-detail.html',
-  styleUrls: ['./product-detail.css']  
+  templateUrl: '../app/product-detail/product-detail.html',
+  styleUrls: ['../app/product-detail/product-detail.css']  
 })
 export class ProductDetailComponent implements OnInit {
 
