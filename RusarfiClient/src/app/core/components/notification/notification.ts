@@ -37,6 +37,8 @@ export class NotificationComponent {
   constructor(private notificationService: NotificationService) {
     effect(() => {
       const currentNotification = this.notificationService.notification();
+      
+      try { console.debug('[NotificationComponent] effect currentNotification', currentNotification); } catch {}
       this.notification.set(currentNotification);
 
       if (this.timeoutId) {

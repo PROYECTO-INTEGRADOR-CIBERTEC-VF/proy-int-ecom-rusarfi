@@ -1,0 +1,8 @@
+/* Basic styles for cart component */
+.font-headline { font-family: theme('fontFamily.headline'); }
+table { border-spacing: 0; }
+th, td { border-bottom: 1px solid rgba(0,0,0,0.04); }
+input[type="number"] { -moz-appearance: textfield; }
+button[disabled] { opacity: 0.5; cursor: not-allowed; }
+.bg-error { background-color: #e63b19; }
+.text-error { color: #e63b19; }

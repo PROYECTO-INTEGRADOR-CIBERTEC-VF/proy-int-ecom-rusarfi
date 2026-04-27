@@ -20,10 +20,22 @@ export class NotificationService {
 
   show(severity: NotificationSeverity, summary: string, detail?: string) {
     const id = ++this.lastId;
-    this.notificationSignal.set({ summary, detail, severity, id });
+    const msg = { summary, detail, severity, id } as NotificationMessage;
+
+    try { console.debug('[NotificationService] show', msg); } catch {}
+    try {
+      setTimeout(() => this.notificationSignal.set(msg), 0);
+    } catch {
+      this.notificationSignal.set(msg);
+    }
   }
 
   clear() {
-    this.notificationSignal.set(null);
+    try { console.debug('[NotificationService] clear'); } catch {}
+    try {
+      setTimeout(() => this.notificationSignal.set(null), 0);
+    } catch {
+      this.notificationSignal.set(null);
+    }
   }
 }
