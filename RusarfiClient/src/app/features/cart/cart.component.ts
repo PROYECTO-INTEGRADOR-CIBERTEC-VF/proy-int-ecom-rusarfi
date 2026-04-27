@@ -5,6 +5,7 @@ import { catchError, of } from 'rxjs';
 
 import { CartService } from '../../core/services/cart.service';
 import { CartItemDto, CartUpdateRequest, CartRemoveRequest } from '../../core/models/cart-item.dto';
+import { NotificationService } from '../../core/services/notification';
 
 @Component({
   selector: 'app-cart',
@@ -16,6 +17,7 @@ import { CartItemDto, CartUpdateRequest, CartRemoveRequest } from '../../core/mo
 export class CartComponent implements OnInit {
   private readonly cartService = inject(CartService);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly notificationService = inject(NotificationService);
 
   protected items: CartItemDto[] = [];
   protected isLoading = true;
@@ -102,6 +104,7 @@ export class CartComponent implements OnInit {
     this.cartService.updateQuantity(req).subscribe({
       next: (res) => {
         if (res?.success) {
+          this.notificationService.show('success', res.message || 'Cantidad actualizada');
           // reload full cart summary from server to keep data consistent
           this.loadCart();
         } else {
@@ -121,6 +124,7 @@ export class CartComponent implements OnInit {
     this.cartService.removeProduct(req).subscribe({
       next: (res) => {
         if (res?.success) {
+          this.notificationService.show('success', res.message || 'Producto eliminado');
           // reload server summary to reflect changes
           this.loadCart();
         } else {
@@ -131,6 +135,7 @@ export class CartComponent implements OnInit {
       error: () => {
         this.errorMessage = 'No se pudo eliminar el producto.';
         try { this.cdr.detectChanges(); } catch {}
+        this.notificationService.show('error', 'No se pudo eliminar el producto.');
       },
     });
   }

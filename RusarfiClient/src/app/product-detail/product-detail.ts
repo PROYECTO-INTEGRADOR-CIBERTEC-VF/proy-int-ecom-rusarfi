@@ -5,6 +5,7 @@ import { ProductService } from '../core/services/product.service';
 import { ProductDto, ProductResponse } from '../features/products/products.models';
 import { CartService } from '../core/services/cart.service';
 import { CartAddRequest } from '../core/models/cart-item.dto';
+import { NotificationService } from '../core/services/notification';
 
 @Component({
   selector: 'app-product-detail',
@@ -19,6 +20,7 @@ export class ProductDetailComponent implements OnInit {
   private productService = inject(ProductService);
   private cdr = inject(ChangeDetectorRef);
   private cartService = inject(CartService);
+  private notificationService = inject(NotificationService);
   protected successMessage = '';
 
   product: ProductDto | null = null;
@@ -79,13 +81,16 @@ export class ProductDetailComponent implements OnInit {
       next: (res) => {
         if (res?.success) {
           this.successMessage = 'Producto agregado al carrito.';
+          this.notificationService.show('success', res.message || 'Producto agregado al carrito.');
         } else {
           this.successMessage = res?.message || 'No se pudo agregar al carrito.';
+          this.notificationService.show('error', res?.message || 'No se pudo agregar al carrito.');
         }
         try { this.cdr.detectChanges(); } catch {}
       },
       error: () => {
         this.successMessage = 'No se pudo agregar al carrito.';
+        this.notificationService.show('error', 'No se pudo agregar al carrito.');
         try { this.cdr.detectChanges(); } catch {}
       }
     });

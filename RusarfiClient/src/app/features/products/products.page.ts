@@ -17,6 +17,7 @@ import { ProductService } from '../../core/services/product.service';
 import { ProductDto } from './products.models';
 import { CartService } from '../../core/services/cart.service';
 import { CartAddRequest } from '../../core/models/cart-item.dto';
+import { NotificationService } from '../../core/services/notification';
 
 @Component({
   selector: 'app-products',
@@ -27,6 +28,7 @@ import { CartAddRequest } from '../../core/models/cart-item.dto';
 export class ProductsPage {
   private readonly productService = inject(ProductService);
   private readonly cartService = inject(CartService);
+  private readonly notificationService = inject(NotificationService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly cdr = inject(ChangeDetectorRef);
 
@@ -128,13 +130,16 @@ export class ProductsPage {
       next: (res) => {
         if (res?.success) {
           this.successMessage = 'Producto agregado al carrito.';
+          this.notificationService.show('success', res.message || 'Producto agregado al carrito.');
         } else {
           this.errorMessage = res?.message || 'No se pudo agregar al carrito.';
+          this.notificationService.show('error', res?.message || 'No se pudo agregar al carrito.');
         }
         try { this.cdr.detectChanges(); } catch {}
       },
       error: () => {
         this.errorMessage = 'No se pudo agregar al carrito.';
+        this.notificationService.show('error', 'No se pudo agregar al carrito.');
         try { this.cdr.detectChanges(); } catch {}
       }
     });
