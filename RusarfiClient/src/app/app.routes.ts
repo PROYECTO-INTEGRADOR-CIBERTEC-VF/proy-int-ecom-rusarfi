@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
 	{ path: '', pathMatch: 'full', redirectTo: 'products' },
+
 	{
 		path: 'register',
 		loadComponent: () =>
@@ -9,11 +10,15 @@ export const routes: Routes = [
 				(m) => m.RegisterPage
 			)
 	},
+
 	{
 		path: 'login',
 		loadComponent: () =>
-			import('./features/auth/login/login.page').then((m) => m.LoginPage)
+			import('./features/auth/login/login.page').then(
+				(m) => m.LoginPage
+			)
 	},
+
 	{
 		path: 'products',
 		loadComponent: () =>
@@ -21,5 +26,14 @@ export const routes: Routes = [
 				(m) => m.ProductsPage
 			)
 	},
+
+	{
+		path: 'product-detail/:id',
+		loadComponent: () =>
+			import('./product-detail/product-detail').then(
+				(m) => m.ProductDetailComponent
+			)
+	},
+
 	{ path: '**', redirectTo: 'products' }
 ];
