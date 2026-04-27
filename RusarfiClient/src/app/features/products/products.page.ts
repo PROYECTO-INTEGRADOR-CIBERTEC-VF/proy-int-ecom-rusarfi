@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, inject } from '@angular/core';
+import { Component, DestroyRef, inject, ChangeDetectorRef } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -25,6 +25,7 @@ import { ProductDto } from './products.models';
 export class ProductsPage {
   private readonly productService = inject(ProductService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   protected readonly searchControl = new FormControl('', { nonNullable: true });
   protected readonly categoryControl = new FormControl('', { nonNullable: true });
@@ -51,9 +52,10 @@ export class ProductsPage {
               this.errorMessage = 'No se pudo cargar el catalogo.';
               return of(null);
             }),
-            finalize(() => {
-              this.isLoading = false;
-            })
+              finalize(() => {
+                this.isLoading = false;
+                try { this.cdr.detectChanges(); } catch {}
+              })
           );
         }),
         takeUntilDestroyed(this.destroyRef)
@@ -132,6 +134,10 @@ export class ProductsPage {
         ? 'No hay productos para los filtros seleccionados.'
         : this.apiMessage;
     }
+
+    try {
+      this.cdr.detectChanges();
+    } catch {}
   }
 
   private hasActiveFilters(): boolean {
