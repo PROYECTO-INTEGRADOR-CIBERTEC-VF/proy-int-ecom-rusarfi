@@ -4,7 +4,7 @@
 			Ropa
 		</h1>
 		<p class="text-secondary max-w-xl font-body text-lg leading-relaxed uppercase tracking-wider text-xs">
-			Siluetas curadas. Textiles de alto volumen. El archivo oversize definitivo.
+			Estilo que amplifica tu presencia.
 		</p>
 	</header>
 
@@ -129,7 +129,7 @@
 		<div class="lg:col-span-9">
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-16">
 				<div
-					*ngIf="isLoading"
+					*ngIf="isLoading && products.length === 0"
 					class="col-span-full text-center text-xs tracking-[0.3em] uppercase text-stone-400"
 				>
 					Cargando productos...
