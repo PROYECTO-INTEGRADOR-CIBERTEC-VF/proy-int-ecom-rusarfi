@@ -1,0 +1,8 @@
+    <h2>Mis Compras</h2>
+
+<div *ngFor="let order of orders">
+  <p>Producto: {{ order.product }}</p>
+  <p>Total: S/ {{ order.total }}</p>
+  <p>Estado: {{ order.status }}</p>
+  <hr>
+</div>
