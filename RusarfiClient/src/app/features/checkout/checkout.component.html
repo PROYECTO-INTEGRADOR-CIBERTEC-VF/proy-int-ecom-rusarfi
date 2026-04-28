@@ -1,0 +1,110 @@
+<main class="checkout-container">
+
+  <h1 class="title">Checkout</h1>
+
+  
+  <div *ngIf="isLoading" class="text-center py-10">
+    Cargando carrito...
+  </div>
+
+
+  <div *ngIf="!isLoading && errorMessage" class="error">
+    {{ errorMessage }}
+  </div>
+
+  
+  <div *ngIf="!isLoading && items.length === 0" class="empty">
+    No hay productos en el carrito
+  </div>
+
+ 
+  <div *ngIf="!isLoading && items && items.length > 0" class="grid">
+
+   
+    <section class="form-section">
+      <h2>Datos del comprador</h2>
+
+      <form [formGroup]="form" class="form">
+
+        <input
+        type="text"
+        placeholder="Nombre completo"
+        formControlName="name"
+        />
+        <div class="error" *ngIf="getFieldError('name')">
+        {{ getFieldError('name') }}
+        </div>
+
+        <input
+        type="text"
+        placeholder="Teléfono"
+        formControlName="phone"
+        />
+        <div class="error" *ngIf="getFieldError('phone')">
+        {{ getFieldError('phone') }}
+        </div>
+
+        <input
+        type="text"
+        placeholder="Dirección"
+        formControlName="address"
+        />
+        <div class="error" *ngIf="getFieldError('address')">
+        {{ getFieldError('address') }}
+        </div>
+
+        <select formControlName="paymentMethod">
+          <option value="card">Tarjeta</option>
+          <option value="cash">Efectivo</option>
+          <option value="transfer">Transferencia</option>
+        </select>
+
+      </form>
+    </section>
+
+  
+    <section class="summary-section">
+      <h2>Resumen de compra</h2>
+
+      <div *ngFor="let item of items" class="item">
+        <div class="item-info">
+          <span class="name">{{ item.productName }}</span>
+          <span class="qty">x{{ item.quantity }}</span>
+        </div>
+
+        <span class="price">
+          {{ item.subtotal | currency:'USD' }}
+        </span>
+      </div>
+
+      <div class="total">
+        Total: {{ total | currency:'USD' }}
+      </div>
+
+      <button 
+  type="button"
+  (click)="finalizePurchase()"
+  [disabled]="isProcessing"
+  class="btn"
+>
+  {{ isProcessing ? 'Procesando...' : 'Finalizar compra' }}
+</button>
+    </section>
+
+  </div>
+
+
+  <div *ngIf="showModal" class="modal-overlay">
+    <div class="modal">
+
+      <h2>Orden N° {{ orderId }}</h2>
+      <p>Orden generada con éxito</p>
+
+      <button (click)="closeModal()" class="btn">
+        Aceptar
+      </button>
+
+    </div>
+  </div>
+
+</main>

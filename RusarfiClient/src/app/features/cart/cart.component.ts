@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { catchError, of } from 'rxjs';
+import { Router } from '@angular/router';
 
 import { CartService } from '../../core/services/cart.service';
 import { CartItemDto, CartUpdateRequest, CartRemoveRequest } from '../../core/models/cart-item.dto';
@@ -18,6 +19,7 @@ export class CartComponent implements OnInit {
   private readonly cartService = inject(CartService);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly notificationService = inject(NotificationService);
+  private router = inject(Router);
 
   protected items: CartItemDto[] = [];
   protected isLoading = true;
@@ -144,9 +146,7 @@ export class CartComponent implements OnInit {
     this.total = this.items.reduce((s, it) => s + (it.subtotal ?? it.price * it.quantity), 0);
   }
 
-  confirmPurchase(): void {
-    // Placeholder: implement checkout flow (create Order) later
-    if (this.items.length === 0) return;
-    alert('Confirmar compra - implementar flujo de checkout');
-  }
+  confirmPurchase() {
+  this.router.navigate(['/checkout']);
+}
 }
