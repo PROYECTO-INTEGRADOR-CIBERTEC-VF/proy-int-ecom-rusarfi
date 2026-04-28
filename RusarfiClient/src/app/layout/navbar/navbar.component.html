@@ -21,7 +21,7 @@
       </a>
       <a class="relative" routerLink="/cart" aria-label="Ver carrito">
         <span class="material-symbols-outlined cursor-pointer text-stone-700 dark:text-stone-200 hover:text-primary transition-colors">shopping_bag</span>
-        <ng-container *ngIf="cartService.cartCount$ | async as count">
+        <ng-container *ngIf="cartCount$ | async as count">
           <span *ngIf="count > 0" class="absolute -top-1 -right-2 bg-secondary-container text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-bold">{{ count }}</span>
         </ng-container>
       </a>

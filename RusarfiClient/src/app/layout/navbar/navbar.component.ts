@@ -1,4 +1,5 @@
 import { Component, inject, AfterViewInit } from '@angular/core';
+import { Observable } from 'rxjs';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { CartService } from '../../core/services/cart.service';
@@ -10,7 +11,8 @@ import { CartService } from '../../core/services/cart.service';
   templateUrl: './navbar.component.html',
 })
 export class NavbarComponent implements AfterViewInit {
-  protected readonly cartService = inject(CartService);
+  protected readonly cartService: CartService = inject(CartService);
+  protected readonly cartCount$: Observable<number> = this.cartService.cartCount$;
   private readonly userId = 1; 
 
   ngAfterViewInit(): void {
