@@ -16,7 +16,7 @@ public sealed class CreateProductRequest
     public string Description { get; init; } = string.Empty;
 
     [Required(ErrorMessage = "El precio es obligatorio")]
-    [Range(typeof(decimal), "0,01", "999999999", ErrorMessage = "El precio debe ser mayor a 0")]
+    [Range(typeof(decimal), "0.01", "999999999", ErrorMessage = "El precio debe ser mayor a 0")]
     public decimal Price { get; init; }
 
     [MaxLength(500, ErrorMessage = "La URL de imagen no puede exceder 500 caracteres")]
