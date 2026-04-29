@@ -39,8 +39,8 @@
                 class="w-20 px-2 py-1 border"
               />
             </td>
-            <td class="py-4">{{ item.price | currency: 'USD' }}</td>
-            <td class="py-4">{{ item.subtotal | currency: 'USD' }}</td>
+            <td class="py-4">S/ {{ item.price | number:'1.2-2' }}</td>
+            <td class="py-4">S/ {{ item.subtotal | number:'1.2-2' }}</td>
             <td class="py-4">
               <button (click)="removeItem(item)" class="px-3 py-1 bg-error text-white rounded">Eliminar</button>
             </td>
@@ -52,7 +52,7 @@
     <div class="mt-6 flex justify-end items-center gap-6">
       <div class="text-right">
         <div class="text-sm text-stone-500">Total</div>
-        <div class="text-2xl font-headline">{{ total | currency: 'USD' }}</div>
+        <div class="text-2xl font-headline">S/ {{ total | number:'1.2-2' }}</div>
       </div>
       <button (click)="confirmPurchase()" class="px-6 py-3 bg-primary text-on-primary rounded font-bold">Confirmar compra</button>
     </div>

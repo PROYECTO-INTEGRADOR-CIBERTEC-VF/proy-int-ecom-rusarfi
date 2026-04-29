@@ -1,12 +1,14 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ChangeDetectorRef } from '@angular/core';
 import { finalize } from 'rxjs';
-
+import { Subscription } from 'rxjs';
 import { CartService } from '../../core/services/cart.service';
 import { OrderService } from '../../core/services/order.service';
+import { AuthService } from '../../core/services/auth.service';
+import { NotificationService } from '../../core/services/notification';
 
 @Component({
   selector: 'app-checkout',
@@ -23,7 +25,10 @@ export class CheckoutComponent implements OnInit {
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
 
-  userId = 1;
+  userId: number | null = null;
+  private userSub: Subscription | null = null;
+  private authService = inject(AuthService);
+  private notificationService = inject(NotificationService);
 
   items: any[] = [];
   total = 0;
@@ -38,17 +43,28 @@ export class CheckoutComponent implements OnInit {
 
   form = this.fb.group({
   name: ['', [Validators.required, Validators.minLength(3)]],
-  phone: ['', [Validators.required, Validators.pattern(/^[0-9]{9}$/)]], // Perú: 9 dígitos
+  phone: ['', [Validators.required, Validators.pattern(/^[0-9]{9}$/)]], 
   address: ['', [Validators.required, Validators.minLength(5)]],
   paymentMethod: ['card', Validators.required]
 });
 
   ngOnInit(): void {
-    this.loadCart();
+    this.userSub = this.authService.currentUser$.subscribe((u) => {
+      this.userId = u?.id ?? null;
+      this.loadCart();
+    });
   }
 
 
   loadCart() {
+  if (!this.userId) {
+    this.items = [];
+    this.total = 0;
+    this.isLoading = false;
+    try { this.cdr.detectChanges(); } catch {}
+    return;
+  }
+
   this.cartService.getCart(this.userId).subscribe({
     next: (res) => {
       console.log('Respuesta carrito:', res);
@@ -90,6 +106,12 @@ finalizePurchase() {
   if (this.form.invalid || this.isProcessing) return;
 
   this.isProcessing = true;
+
+  if (!this.userId) {
+    this.notificationService.show('info', 'Inicia sesión para finalizar la compra');
+    this.router.navigate(['/login']);
+    return;
+  }
 
   this.orderService.confirmOrder({ userId: this.userId })
     .pipe(
@@ -136,5 +158,9 @@ getFieldError(field: string): string | null {
   closeModal() {
     this.showModal = false;
     this.router.navigate(['/']);
+  }
+
+  ngOnDestroy(): void {
+    try { this.userSub?.unsubscribe(); } catch {}
   }
 }

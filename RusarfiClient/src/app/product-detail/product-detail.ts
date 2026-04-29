@@ -6,6 +6,8 @@ import { ProductDto, ProductResponse } from '../features/products/products.model
 import { CartService } from '../core/services/cart.service';
 import { CartAddRequest } from '../core/models/cart-item.dto';
 import { NotificationService } from '../core/services/notification';
+import { AuthService } from '../core/services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-detail',
@@ -21,6 +23,8 @@ export class ProductDetailComponent implements OnInit {
   private cdr = inject(ChangeDetectorRef);
   private cartService = inject(CartService);
   private notificationService = inject(NotificationService);
+  private authService = inject(AuthService);
+  private router = inject(Router);
   protected successMessage = '';
 
   product: ProductDto | null = null;
@@ -76,7 +80,14 @@ export class ProductDetailComponent implements OnInit {
   addToCart(): void {
     if (!this.product) return;
     this.successMessage = '';
-    const req: CartAddRequest = { userId: 1, productId: this.product.id, quantity: 1 };
+    const userId = this.authService.getUserId();
+    if (!userId) {
+      this.notificationService.show('info', 'Inicia sesión para agregar productos al carrito');
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    const req: CartAddRequest = { userId: userId, productId: this.product.id, quantity: 1 };
     this.cartService.addProduct(req).subscribe({
       next: (res) => {
         if (res?.success) {
