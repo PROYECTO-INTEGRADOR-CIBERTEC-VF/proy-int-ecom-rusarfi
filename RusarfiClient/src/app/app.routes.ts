@@ -50,6 +50,13 @@ export const routes: Routes = [
 				(m) => m.ProductDetailComponent
 			)
 	},
+	{
+	path: 'my-orders',
+	loadComponent: () =>
+		import('./features/my-orders/my-orders').then(
+			(m) => m.MyOrders
+		)
+},
 
 	{ path: '**', redirectTo: 'products' }
 ];

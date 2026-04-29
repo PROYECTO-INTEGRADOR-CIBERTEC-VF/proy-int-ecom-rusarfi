@@ -66,19 +66,17 @@ export class LoginPage {
       .login(payload)
       .pipe(finalize(() => (this.isSubmitting = false)))
       .subscribe({
-        next: () => {
-          this.notificationService.show(
-            'success',
-            'Login exitoso'
-          );
+        next: (res) => {
+          if (res?.success) {
+            this.notificationService.show('success', res.message || 'Login exitoso');
+            this.router.navigateByUrl('/');
+            return;
+          }
 
-          this.router.navigateByUrl('/');
+          this.notificationService.show('error', res?.message || 'Credenciales incorrectas');
         },
         error: () => {
-          this.notificationService.show(
-            'error',
-            'Credenciales incorrectas'
-          );
+          this.notificationService.show('error', 'Credenciales incorrectas');
         }
       });
   }

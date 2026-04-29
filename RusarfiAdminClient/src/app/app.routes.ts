@@ -13,5 +13,15 @@ export const routes: Routes = [
 				(m) => m.AdminProductsPage
 			)
 	},
+
+	{
+		path: 'orders-admin',
+		loadComponent: () =>
+			import('./features/orders-admin/orders-admin').then(
+				(m) => m.OrdersAdmin
+			)
+	},
+
 	{ path: '**', redirectTo: 'productos' }
 ];
+	

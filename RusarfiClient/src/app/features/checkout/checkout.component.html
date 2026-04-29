@@ -73,12 +73,12 @@
         </div>
 
         <span class="price">
-          {{ item.subtotal | currency:'USD' }}
+          S/ {{ item.subtotal | number:'1.2-2' }}
         </span>
       </div>
 
       <div class="total">
-        Total: {{ total | currency:'USD' }}
+        Total: S/ {{ total | number:'1.2-2' }}
       </div>
 
       <button 

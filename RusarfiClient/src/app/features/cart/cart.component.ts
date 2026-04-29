@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { catchError, of } from 'rxjs';
+import { catchError, of, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 
 import { CartService } from '../../core/services/cart.service';
 import { CartItemDto, CartUpdateRequest, CartRemoveRequest } from '../../core/models/cart-item.dto';
 import { NotificationService } from '../../core/services/notification';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-cart',
@@ -25,20 +26,31 @@ export class CartComponent implements OnInit {
   protected isLoading = true;
   protected errorMessage = '';
   protected total = 0;
-
-
-  private readonly userId = 1;
+  protected currentUserId: number | null = null;
+  private userSub: Subscription | null = null;
+  private authService = inject(AuthService);
 
   ngOnInit(): void {
-    this.loadCart();
+    this.userSub = this.authService.currentUser$.subscribe((u) => {
+      this.currentUserId = u?.id ?? null;
+      this.loadCart();
+    });
   }
 
   loadCart(): void {
     this.isLoading = true;
     this.errorMessage = '';
 
+    if (!this.currentUserId) {
+      this.items = [];
+      this.total = 0;
+      this.isLoading = false;
+      try { this.cdr.detectChanges(); } catch {}
+      return;
+    }
+
     this.cartService
-      .getCart(this.userId)
+      .getCart(this.currentUserId)
       .pipe(
         catchError((err) => {
           console.error('Cart load error', err);
@@ -98,7 +110,7 @@ export class CartComponent implements OnInit {
     }
 
     const req: CartUpdateRequest = {
-      userId: this.userId,
+      userId: this.currentUserId ?? 0,
       productId: item.productId,
       quantity: qty,
     };
@@ -107,7 +119,6 @@ export class CartComponent implements OnInit {
       next: (res) => {
         if (res?.success) {
           this.notificationService.show('success', res.message || 'Cantidad actualizada');
-          // reload full cart summary from server to keep data consistent
           this.loadCart();
         } else {
           this.errorMessage = res?.message || 'No se pudo actualizar cantidad.';
@@ -122,12 +133,17 @@ export class CartComponent implements OnInit {
   }
 
   removeItem(item: CartItemDto): void {
-    const req: CartRemoveRequest = { userId: this.userId, productId: item.productId };
+    if (!this.currentUserId) {
+      this.notificationService.show('info', 'Inicia sesión para modificar el carrito');
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    const req: CartRemoveRequest = { userId: this.currentUserId, productId: item.productId };
     this.cartService.removeProduct(req).subscribe({
       next: (res) => {
         if (res?.success) {
           this.notificationService.show('success', res.message || 'Producto eliminado');
-          // reload server summary to reflect changes
           this.loadCart();
         } else {
           this.errorMessage = res?.message || 'No se pudo eliminar el producto.';
@@ -149,4 +165,8 @@ export class CartComponent implements OnInit {
   confirmPurchase() {
   this.router.navigate(['/checkout']);
 }
+
+  ngOnDestroy(): void {
+    try { this.userSub?.unsubscribe(); } catch {}
+  }
 }

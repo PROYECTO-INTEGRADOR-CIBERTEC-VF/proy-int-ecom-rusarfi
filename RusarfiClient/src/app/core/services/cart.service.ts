@@ -66,4 +66,8 @@ export class CartService {
       error: () => this._count$.next(0),
     });
   }
+
+  clearCount(): void {
+    try { this._count$.next(0); } catch { this._count$.next(0); }
+  }
 }
