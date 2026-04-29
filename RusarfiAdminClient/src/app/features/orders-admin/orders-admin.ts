@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-orders-admin',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './orders-admin.html',
-  styleUrl: './orders-admin.css',
+  styleUrls: ['./orders-admin.css'],
 })
 export class OrdersAdmin {
 

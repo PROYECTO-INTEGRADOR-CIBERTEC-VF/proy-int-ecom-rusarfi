@@ -20,7 +20,9 @@ export class NotificationService {
 
   show(severity: NotificationSeverity, summary: string, detail?: string) {
     const id = ++this.lastId;
-    this.notificationSignal.set({ summary, detail, severity, id });
+    setTimeout(() => {
+      this.notificationSignal.set({ summary, detail, severity, id });
+    });
   }
 
   clear() {
