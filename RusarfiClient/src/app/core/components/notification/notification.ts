@@ -79,15 +79,15 @@ export class NotificationComponent {
   get containerClasses(): string {
     switch (this.notification()?.severity) {
       case 'success':
-        return 'bg-tertiary/10 border-tertiary text-tertiary-dim';
+        return 'bg-tertiary/90 text-white';
       case 'error':
-        return 'bg-error/10 border-error text-error-dim';
+        return 'bg-error/90 text-white';
       case 'warn':
-        return 'bg-yellow-500/10 border-yellow-500 text-yellow-600';
+        return 'bg-yellow-700 text-white';
       case 'info':
-        return 'bg-blue-500/10 border-blue-500 text-blue-600';
+        return 'bg-blue-600 text-white';
       default:
-        return 'bg-gray-500/10 border-gray-500 text-gray-600';
+        return 'bg-gray-900 text-white';
     }
   }
 }
