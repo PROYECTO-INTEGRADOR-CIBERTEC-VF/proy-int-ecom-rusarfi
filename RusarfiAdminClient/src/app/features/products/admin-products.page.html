@@ -122,7 +122,7 @@
                   </span>
                 </td>
                 <td class="px-6 py-4 text-sm font-medium">
-                  {{ product.price | currency: 'USD' : 'symbol' : '1.0-2' }}
+                  S/ {{ product.price | number: '1.0-2' }}
                 </td>
                 <td class="px-6 py-4">
                   <div class="flex items-center gap-2">
@@ -200,7 +200,7 @@
           <p *ngIf="fieldError('description')" class="text-xs text-error">{{ fieldError('description') }}</p>
         </div>
         <div class="space-y-1">
-          <label class="text-[10px] font-bold uppercase tracking-widest text-secondary block">Precio (USD)</label>
+          <label class="text-[10px] font-bold uppercase tracking-widest text-secondary block">Precio (S/)</label>
           <input class="w-full bg-surface-container py-3 px-4 rounded-lg border-none focus:ring-2 focus:ring-primary-fixed text-sm outline-none" step="0.01" type="number" formControlName="price" />
           <p *ngIf="fieldError('price')" class="text-xs text-error">{{ fieldError('price') }}</p>
         </div>
